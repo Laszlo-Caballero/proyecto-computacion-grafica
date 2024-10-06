@@ -1,4 +1,5 @@
-from PyQt5.QtWidgets import QOpenGLWidget
+import sys
+from PyQt5.QtWidgets import QMainWindow, QApplication, QWidget, QVBoxLayout, QLabel, QPushButton, QStackedWidget, QOpenGLWidget
 from OpenGL.GL import *
 from OpenGL.GLU import *
 from OpenGL.GLUT import *
@@ -8,7 +9,6 @@ class GLWidget(QOpenGLWidget):
     def __init__(self, parent=None):
         super(GLWidget, self).__init__(parent)
         self.sol = Planeta("sol", 2000, 20, "sol.bmp")
-        
         
 
     def initializeGL(self):
