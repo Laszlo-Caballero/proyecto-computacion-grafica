@@ -1,6 +1,7 @@
 import sys
 from PyQt5.QtGui import QMouseEvent, QWheelEvent
 from PyQt5.QtWidgets import  QOpenGLWidget
+from PyQt5.QtCore import Qt
 from OpenGL.GL import *
 from OpenGL.GLU import *
 from OpenGL.GLUT import *
@@ -13,12 +14,11 @@ class GLWidget(QOpenGLWidget):
         self.zoom_factor = 1.0
         self.camera_x = 2.5
         self.camera_y = 1.0
-        self.camera_z = 2.5
+        self.camera_z = 2.5 
         
-        self.center_x = self.geometry().width()
-        self.center_y = self.geometry().height()
         
-        print(f"{self.center_x=}   {self.center_y=}")
+        self.mouse_is_press = False
+        
         
         
     def get_center_of_window(self):
@@ -116,10 +116,11 @@ class GLWidget(QOpenGLWidget):
         glRasterPos3f(0.0,0.0,-1.2)
         glutBitmapCharacter(GLUT_BITMAP_HELVETICA_18, ord("Z"))
         
-    def mousePressEvent(self, event: QMouseEvent | None):        
+    def mouseMoveEvent(self, event: QMouseEvent | None):        
         center_x, center_y = self.get_center_of_window()
-        x = event.pos().x() - center_x
-        y = event.pos().y() - center_y
+        if self.mouse_is_press:
+            x = event.pos().x() - center_x
+            y = event.pos().y() - center_y
 
 
 
@@ -133,5 +134,13 @@ class GLWidget(QOpenGLWidget):
             self.zoom_in()
         else:
             self.zoom_out()
-        
+    
+    
+    def mousePressEvent(self, event: QMouseEvent | None):
+        if event.button() == Qt.LeftButton:
+            self.mouse_is_press = True
+    
+    def mouseReleaseEvent(self, event: QMouseEvent | None):
+        if event.button() == Qt.LeftButton:
+            self.mouse_is_press = False
         
