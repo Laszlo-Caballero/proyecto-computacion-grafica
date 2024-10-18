@@ -1,6 +1,6 @@
 import sys
-from PyQt5.QtGui import QMouseEvent, QWheelEvent
-from PyQt5.QtWidgets import  QOpenGLWidget
+from PyQt5.QtGui import QMouseEvent, QWheelEvent, QPainter, QFont
+from PyQt5.QtWidgets import QOpenGLWidget, QPushButton
 from PyQt5.QtCore import Qt
 from OpenGL.GL import *
 from OpenGL.GLU import *
@@ -15,11 +15,19 @@ class GLWidget(QOpenGLWidget):
         self.camera_x = 2.5
         self.camera_y = 1.0
         self.camera_z = 2.5 
-        
-        
+        self.show_box = False
         self.mouse_is_press = False
+        self.button = QPushButton("Cerrar", self)
+        self.button.clicked.connect(self.toggle_info_box)
+        self.button.hide()
         
-        
+    def toggle_info_box(self):
+        self.show_box = not self.show_box 
+        if not self.show_box:  # Si el recuadro no se va a mostrar, oculta el botón
+            self.button.hide()
+        else:  # Si el recuadro se va a mostrar, muestra el botón
+            self.button.show()
+        self.update()  
         
     def get_center_of_window(self):
         # Obtener la geometría de la ventana (posición y tamaño)
@@ -41,9 +49,7 @@ class GLWidget(QOpenGLWidget):
         gluPerspective(45.0, aspect, 1.0, 100.0)
         glMatrixMode(GL_MODELVIEW)
         glLoadIdentity()
-      
-      
-        
+
     def zoom_in(self):
         self.zoom_factor *= 0.9  # Reduce el factor de zoom para acercar
         self.update_camera_position()
@@ -53,6 +59,7 @@ class GLWidget(QOpenGLWidget):
         self.zoom_factor *= 1.1  # Aumenta el factor de zoom para alejar
         self.update_camera_position()
         self.update()
+        
     def update_camera_position(self):
         self.camera_x = 2.5 * self.zoom_factor
         self.camera_y = 1.0 * self.zoom_factor
@@ -84,6 +91,9 @@ class GLWidget(QOpenGLWidget):
         
         
         self.draw_axes()
+        
+        if self.show_box:
+            self.draw_info_box()
 
     def draw_axes(self):
         glColor3f(1.0, 1.0, 1.0)  
@@ -115,14 +125,26 @@ class GLWidget(QOpenGLWidget):
         glutBitmapCharacter(GLUT_BITMAP_HELVETICA_18, ord("Z"))
         glRasterPos3f(0.0,0.0,-1.2)
         glutBitmapCharacter(GLUT_BITMAP_HELVETICA_18, ord("Z"))
+    
+    def draw_info_box(self):
         
+        # Dibujar el recuadro en la esquina superior derecha
+        painter = QPainter(self)
+        painter.setPen(Qt.white)
+        painter.setBrush(Qt.black)
+        painter.drawRect(self.width() - 300, 10, 290, 200)  
+        painter.setFont(QFont("Arial", 10))
+        painter.drawText(self.width() - 290, 30, "ola :D")  
+        
+        self.button.setGeometry(self.width()  - 290, 170, 80, 30)  
+        self.button.show()  
+        painter.end()   
+
     def mouseMoveEvent(self, event: QMouseEvent | None):        
         center_x, center_y = self.get_center_of_window()
         if self.mouse_is_press:
             x = event.pos().x() - center_x
             y = event.pos().y() - center_y
-
-
 
         print(f"Mouse clicked at: x={x}, y={y}")
         
@@ -139,7 +161,9 @@ class GLWidget(QOpenGLWidget):
     def mousePressEvent(self, event: QMouseEvent | None):
         if event.button() == Qt.LeftButton:
             self.mouse_is_press = True
-    
+            self.show_box = True  # Mostrar el recuadro al hacer clic
+            self.update() 
+            
     def mouseReleaseEvent(self, event: QMouseEvent | None):
         if event.button() == Qt.LeftButton:
             self.mouse_is_press = False
