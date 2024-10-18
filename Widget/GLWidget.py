@@ -1,5 +1,5 @@
 import sys
-from PyQt5.QtWidgets import QMainWindow, QApplication, QWidget, QVBoxLayout, QLabel, QPushButton, QStackedWidget, QOpenGLWidget
+from PyQt5.QtWidgets import  QOpenGLWidget
 from OpenGL.GL import *
 from OpenGL.GLU import *
 from OpenGL.GLUT import *
