@@ -1,4 +1,5 @@
 import sys
+from PyQt5.QtGui import QMouseEvent, QWheelEvent
 from PyQt5.QtWidgets import  QOpenGLWidget
 from OpenGL.GL import *
 from OpenGL.GLU import *
@@ -13,6 +14,35 @@ class GLWidget(QOpenGLWidget):
         self.camera_x = 2.5
         self.camera_y = 1.0
         self.camera_z = 2.5
+        
+        self.center_x = self.geometry().width()
+        self.center_y = self.geometry().height()
+        
+        print(f"{self.center_x=}   {self.center_y=}")
+        
+        
+    def get_center_of_window(self):
+        # Obtener la geometría de la ventana (posición y tamaño)
+        window_geometry = self.geometry()
+
+        # Calcular el centro de la ventana
+        center_x = window_geometry.x() + window_geometry.width() // 2
+        center_y = window_geometry.y() + window_geometry.height() // 2
+
+        return (center_x, center_y)
+
+    def reshape(width, height):
+        if height == 0:
+            height = 1
+        aspect = width / height
+        glViewport(0, 0, width, height)
+        glMatrixMode(GL_PROJECTION)
+        glLoadIdentity()
+        gluPerspective(45.0, aspect, 1.0, 100.0)
+        glMatrixMode(GL_MODELVIEW)
+        glLoadIdentity()
+      
+      
         
     def zoom_in(self):
         self.zoom_factor *= 0.9  # Reduce el factor de zoom para acercar
@@ -48,9 +78,9 @@ class GLWidget(QOpenGLWidget):
         gluLookAt(self.camera_x, self.camera_y, self.camera_z,  # Posición de la cámara ajustada
                   0, 0, 0,  # Mira hacia (centro de la escena)
                   0.0, 1.0, 0)
-        self.sol.load_texture()
-        glBindTexture(GL_TEXTURE_2D, self.sol.texture_id)
-        self.sol.drawPlanet()
+        # self.sol.load_texture()
+        # glBindTexture(GL_TEXTURE_2D, self.sol.texture_id)
+        # self.sol.drawPlanet()
         
         
         self.draw_axes()
@@ -86,4 +116,22 @@ class GLWidget(QOpenGLWidget):
         glRasterPos3f(0.0,0.0,-1.2)
         glutBitmapCharacter(GLUT_BITMAP_HELVETICA_18, ord("Z"))
         
-    
+    def mousePressEvent(self, event: QMouseEvent | None):        
+        center_x, center_y = self.get_center_of_window()
+        x = event.pos().x() - center_x
+        y = event.pos().y() - center_y
+
+
+
+        print(f"Mouse clicked at: x={x}, y={y}")
+        
+        
+    def wheelEvent(self, event: QWheelEvent | None):
+        delta = event.angleDelta().y()
+        
+        if delta > 0:
+            self.zoom_in()
+        else:
+            self.zoom_out()
+        
+        
