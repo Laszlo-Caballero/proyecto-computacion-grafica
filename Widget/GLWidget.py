@@ -6,11 +6,13 @@ from OpenGL.GLU import *
 from OpenGL.GLUT import *
 from Planets.Planet import Planeta
 from .Utils.UtilsGl import GetCameraPosition, draw_axes
+from utils.planetas import planetasObj
 
 class GLWidget(QOpenGLWidget):
     def __init__(self, parent=None):
         super(GLWidget, self).__init__(parent)
-        self.sol = Planeta("sol", 2000, 20, "sol.bmp")
+        self.sol = Planeta("sol", 20, "sol.bmp", 0)
+        self.mercurio = Planeta("mercurio", 10, "", 1.5)
         self.zoom_factor = 1.0
         self.camera_distance = 5.0
         self.mouse_is_press = False
@@ -22,6 +24,13 @@ class GLWidget(QOpenGLWidget):
         self.button = QPushButton("Cerrar", self)
         self.button.clicked.connect(self.toggle_info_box)
         self.button.hide()
+        
+        self.PlanetasClass: list[Planeta] = []
+
+        for planeta in planetasObj:
+            newPlanet = Planeta(planeta, planetasObj[planeta]["tamaño"], planetasObj[planeta]["textura"],
+                        planetasObj[planeta]["distancia"])
+            self.PlanetasClass.append(newPlanet)
         
     def toggle_info_box(self):
         self.show_box = not self.show_box 
@@ -74,12 +83,20 @@ class GLWidget(QOpenGLWidget):
         gluLookAt(camera_x, camera_y, camera_z,  # Posición de la cámara ajustada
                   0, 0, 0,  # Mira hacia (centro de la escena)
                   0.0, 1.0, 0)
-        self.sol.load_texture()
-        glBindTexture(GL_TEXTURE_2D, self.sol.texture_id)
-        self.sol.drawPlanet()
+        # self.sol.load_texture()
+        # glBindTexture(GL_TEXTURE_2D, self.sol.texture_id)
+        # self.sol.drawPlanet()
         
         
-        draw_axes()
+        # self.mercurio.drawPlanet()
+        
+        for planeta in self.PlanetasClass:
+            # planeta.load_texture()
+            # glBindTexture(GL_TEXTURE_2D, planeta.texture_id)
+            planeta.drawPlanet()
+        
+        
+        # draw_axes()
         
         if self.show_box:
             self.draw_info_box()
@@ -92,7 +109,7 @@ class GLWidget(QOpenGLWidget):
         painter.setBrush(Qt.black)
         painter.drawRect(self.width() - 300, 10, 290, 200)  
         painter.setFont(QFont("Arial", 10))
-        painter.drawText(self.width() - 290, 30, "ola :D")  
+        painter.drawText(self.width() - 290, 30, "INFO PLANETA")  
         
         self.button.setGeometry(self.width()  - 290, 170, 80, 30)  
         self.button.show()  

@@ -4,12 +4,12 @@ from OpenGL.GLU import *
 from OpenGL.GLUT import *
 
 class Planeta:
-    def __init__(self, nombre, masa, radio, image):
+    def __init__(self, nombre, radio, image, distancia_sol):
         self.nombre = nombre
-        self.masa = masa
         self.radio = radio /100
         self.image_path = image
         self.texture_id = -1
+        self.distancia_sol = distancia_sol
         
     def load_texture(self):
         try:
@@ -29,5 +29,6 @@ class Planeta:
             print(f"Error al cargar textura: {e}")
     
     def drawPlanet(self):
+        glTranslate(self.distancia_sol, 0,0)
         quadric = gluNewQuadric()
         gluSphere(quadric, self.radio, 60, 60)

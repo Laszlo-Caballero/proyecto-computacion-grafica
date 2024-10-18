@@ -19,3 +19,52 @@ planetas = [
     PlanetaDescripcion("Urano", "Gigante helado con un eje de rotación inclinado", "50.724 km", "2.870.990.000 km", "27", "18 horas", "84 años"),
     PlanetaDescripcion("Neptuno", "Tiene los vientos más rápidos del sistema solar", "49.244 km", "4.504.300.000 km", "14", "16 horas", "165 años")
 ]
+
+
+planetasObj = {
+    'Sol': {
+       'tamaño': 20,
+       'textura': "sol.bmp",
+      'distancia': 0,
+    },
+    'Mercurio': {
+        'tamaño': 10,
+        'textura': "",
+        'distancia':1.5
+    },
+    'Venus': {
+        'tamaño': 11,
+        'textura': "",
+        'distancia':1.80
+        },
+    'Tierra': {
+        'tamaño': 12,
+        'textura': "",
+        'distancia': 2.20
+        },
+    'Marte': {
+        'tamaño': 12,
+        'textura': "",
+        'distancia': 2.60
+        },
+    'Júpiter': {
+        'tamaño': 25,
+        'textura': "",
+        'distancia':3.10
+        },
+    'Saturno': {
+        'tamaño': 18,
+        'textura': "",
+        'distancia':3.70
+        },
+    'Urano': {
+        'tamaño': 15,
+        'textura': "",
+        'distancia': 4.20
+        },
+    'Neptuno': {
+        'tamaño': 15,
+        'textura': "",
+        'distancia': 4.75
+        },
+}
