@@ -1,5 +1,6 @@
 from PIL import Image
 from OpenGL.GL import *
+from OpenGL.GLU import *
 from OpenGL.GLUT import *
 
 class Planeta:
@@ -28,4 +29,5 @@ class Planeta:
             print(f"Error al cargar textura: {e}")
     
     def drawPlanet(self):
-        glutWireSphere(self.radio, 250,250)
+        quadric = gluNewQuadric()
+        gluSphere(quadric, self.radio, 60, 60)
