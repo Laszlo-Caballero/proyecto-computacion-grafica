@@ -1,4 +1,4 @@
-from PyQt5.QtGui import QMouseEvent, QWheelEvent, QPainter, QFont
+from PyQt5.QtGui import QKeyEvent, QMouseEvent, QWheelEvent, QPainter, QFont
 from PyQt5.QtWidgets import QOpenGLWidget, QPushButton
 from PyQt5.QtCore import Qt
 from OpenGL.GL import *
@@ -24,6 +24,9 @@ class GLWidget(QOpenGLWidget):
         self.button = QPushButton("Cerrar", self)
         self.button.clicked.connect(self.toggle_info_box)
         self.button.hide()
+        self.setFocusPolicy(Qt.StrongFocus)
+        self.center_camera_x = 0
+        self.center_camera_y = 0
         
         self.PlanetasClass: list[Planeta] = []
 
@@ -81,7 +84,7 @@ class GLWidget(QOpenGLWidget):
 
     
         gluLookAt(camera_x, camera_y, camera_z,  # Posición de la cámara ajustada
-                  0, 0, 0,  # Mira hacia (centro de la escena)
+                  self.center_camera_x, self.center_camera_y, 0,  # Mira hacia (centro de la escena)
                   0.0, 1.0, 0)
         # self.sol.load_texture()
         # glBindTexture(GL_TEXTURE_2D, self.sol.texture_id)
@@ -94,6 +97,8 @@ class GLWidget(QOpenGLWidget):
             # planeta.load_texture()
             # glBindTexture(GL_TEXTURE_2D, planeta.texture_id)
             planeta.drawPlanet()
+            
+            
         
         
         # draw_axes()
@@ -162,3 +167,19 @@ class GLWidget(QOpenGLWidget):
         if event.button() == Qt.LeftButton:
             self.mouse_is_press = False
             self.last_mouse_pos = None  # Reiniciar la posición del mouse al soltar
+    
+    def keyPressEvent(self, event: QKeyEvent | None):
+        key = event.key()
+        print(key)
+    # Mover la cámara en pasos dependiendo de la tecla presionada
+        step = 0.2
+        if key == Qt.Key_A:  # Mover a la izquierda
+            self.center_camera_x -= step
+        elif key == Qt.Key_S:  # Mover hacia abajo
+            self.center_camera_y -= step
+        elif key == Qt.Key_W:
+            self.center_camera_y += step
+        elif key == Qt.Key_D:  # Mover a la derecha
+            self.center_camera_x += step
+            
+        self.update()
