@@ -6,6 +6,8 @@ from OpenGL.GLU import *
 from OpenGL.GLUT import *
 from Planets.Planet import Planeta
 from .Utils.UtilsGl import GetCameraPosition, draw_axes
+import pywavefront
+import numpy as np
 
 class GLWidget(QOpenGLWidget):
     def __init__(self, parent=None):
@@ -22,6 +24,27 @@ class GLWidget(QOpenGLWidget):
         self.button = QPushButton("Cerrar", self)
         self.button.clicked.connect(self.toggle_info_box)
         self.button.hide()
+        self.model = None
+    
+    def normalizar_modelo(self, model):
+        vertices = np.array(model.vertices)
+        # Encontrar las coordenadas mínimas y máximas de los vértices
+        min_v = np.min(vertices, axis=0)
+        max_v = np.max(vertices, axis=0)
+
+        # Calcular el centro del modelo
+        centro = (min_v + max_v) / 2
+        # Calcular el tamaño del modelo
+        size = max_v - min_v
+        max_size = max(size)
+
+        # Escalar el modelo para que quepa dentro de un rango de [-1, 1]
+        escala = 1.0 / max_size
+        for i in range(len(model.vertices)):
+            model.vertices[i] = (model.vertices[i] - centro) * escala
+
+        print("Modelo normalizado")
+        return model
         
     def toggle_info_box(self):
         self.show_box = not self.show_box 
@@ -56,6 +79,14 @@ class GLWidget(QOpenGLWidget):
         glMatrixMode(GL_PROJECTION)
         glutInit()
         glEnable(GL_TEXTURE_2D)
+        
+        try:
+            self.model = pywavefront.Wavefront('obj\\Saturn.obj', collect_faces=True)
+            self.model = self.normalizar_modelo(self.model)
+            print("Modelo cargado y normalizado correctamente")
+        except Exception as e:
+            print(f"Error al cargar el modelo: {e}")
+            self.model = None
 
     def resizeGL(self, w, h):
         glViewport(0, 0, w, h)
@@ -81,8 +112,23 @@ class GLWidget(QOpenGLWidget):
         
         draw_axes()
         
+        if self.model:
+            self.dibujar_modelo()
+        else:
+            print("No hay modelo cargado para dibujar")
+            
         if self.show_box:
             self.draw_info_box()
+    
+    def dibujar_modelo(self):
+        # Dibujar el modelo 3D cargado
+        glColor3f(1.0, 1.0, 1.0)  # Color blanco para el modelo
+        for mesh in self.model.mesh_list:
+            glBegin(GL_TRIANGLES)
+            for face in mesh.faces:
+                for vertex_i in face:
+                    glVertex3fv(self.model.vertices[vertex_i])
+            glEnd()
         
     def draw_info_box(self):
         
