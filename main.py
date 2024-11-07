@@ -6,7 +6,7 @@ from Widget.GLWidget import GLWidget
 from PyQt5.QtWidgets import QMainWindow, QApplication, QWidget, QVBoxLayout, QLabel, QPushButton, QStackedWidget
 from PyQt5.QtCore import Qt
 from PyQt5.QtWidgets import QWidget, QVBoxLayout, QLabel, QPushButton
-from PyQt5.QtGui import QFont,QPalette, QColor, QPixmap, QBrush, QPainter
+from PyQt5.QtGui import QFont,QPalette, QColor, QPainter
 from OpenGL.GL import *
 from OpenGL.GLU import *
 from OpenGL.GLUT import *

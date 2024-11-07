@@ -2,14 +2,27 @@ from PIL import Image
 from OpenGL.GL import *
 from OpenGL.GLU import *
 from OpenGL.GLUT import *
+import math
 
 class Planeta:
-    def __init__(self, nombre, radio, image, distancia_sol):
+    def __init__(self, nombre, radio, image, distancia_sol, dias_Sol):
         self.nombre = nombre
         self.radio = radio /100
         self.image_path = image
         self.texture_id = -1
         self.distancia_sol = distancia_sol
+        self.dia_Sol = dias_Sol
+        self.z = 0
+        segundos = self.dia_Sol * 60/365
+        if dias_Sol == 0:
+            self.angle_increment = 0
+        else:
+            self.angle_increment = (2 * math.pi) / (segundos * (1000 / 16))
+        
+     
+     
+    def rotate(self):
+        self.z += self.angle_increment
         
     def load_texture(self):
         try:
@@ -29,6 +42,10 @@ class Planeta:
             print(f"Error al cargar textura: {e}")
     
     def drawPlanet(self):
-        glTranslate(self.distancia_sol, 0,0)
+        
+        x_position = math.cos(self.z) * self.distancia_sol
+        z_position = math.sin(self.z) * self.distancia_sol
+        
+        glTranslate(x_position, 0, z_position)
         quadric = gluNewQuadric()
         gluSphere(quadric, self.radio, 60, 60)

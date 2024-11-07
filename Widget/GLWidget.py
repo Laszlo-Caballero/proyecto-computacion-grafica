@@ -1,6 +1,6 @@
 from PyQt5.QtGui import QKeyEvent, QMouseEvent, QWheelEvent, QPainter, QFont
 from PyQt5.QtWidgets import QOpenGLWidget, QPushButton
-from PyQt5.QtCore import Qt
+from PyQt5.QtCore import Qt, QTimer
 from OpenGL.GL import *
 from OpenGL.GLU import *
 from OpenGL.GLUT import *
@@ -11,8 +11,6 @@ from utils.planetas import planetasObj
 class GLWidget(QOpenGLWidget):
     def __init__(self, parent=None):
         super(GLWidget, self).__init__(parent)
-        self.sol = Planeta("sol", 20, "sol.bmp", 0)
-        self.mercurio = Planeta("mercurio", 10, "", 1.5)
         self.zoom_factor = 1.0
         self.camera_distance = 5.0
         self.mouse_is_press = False
@@ -27,12 +25,15 @@ class GLWidget(QOpenGLWidget):
         self.setFocusPolicy(Qt.StrongFocus)
         self.center_camera_x = 0
         self.center_camera_y = 0
+        self.timer = QTimer()
+        self.timer.timeout.connect(self.rotatePlanets)
+        self.timer.start(16)
         
         self.PlanetasClass: list[Planeta] = []
 
         for planeta in planetasObj:
             newPlanet = Planeta(planeta, planetasObj[planeta]["tamaño"], planetasObj[planeta]["textura"],
-                        planetasObj[planeta]["distancia"])
+                        planetasObj[planeta]["distancia"],planetasObj[planeta]["dias"])
             self.PlanetasClass.append(newPlanet)
         
     def toggle_info_box(self):
@@ -76,6 +77,13 @@ class GLWidget(QOpenGLWidget):
         gluPerspective(45.0, w / h if h != 0 else 1, 0.1, 100.0)
         glMatrixMode(GL_MODELVIEW)
 
+    
+    def rotatePlanets(self):
+        for planet in self.PlanetasClass:
+            planet.rotate()
+            self.update()
+    
+    
     def paintGL(self):
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT)
         glLoadIdentity()
@@ -93,6 +101,7 @@ class GLWidget(QOpenGLWidget):
         
         # self.mercurio.drawPlanet()
         
+        draw_axes()
         for planeta in self.PlanetasClass:
             # planeta.load_texture()
             # glBindTexture(GL_TEXTURE_2D, planeta.texture_id)
@@ -101,7 +110,6 @@ class GLWidget(QOpenGLWidget):
             
         
         
-        # draw_axes()
         
         if self.show_box:
             self.draw_info_box()
