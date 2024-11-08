@@ -96,7 +96,7 @@ class GLWidget(QOpenGLWidget):
         glEnable(GL_TEXTURE_2D)
         
         try:
-            self.model = pywavefront.Wavefront('obj\\sin_nombre.obj', collect_faces=True)
+            self.model = pywavefront.Wavefront('obj\\tierra.obj', collect_faces=True)
             self.model = self.normalizar_modelo(self.model)
             print("Modelo cargado y normalizado correctamente")
         except Exception as e:
