@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sistema Solar 3D</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <style>
+        body { margin: 0; overflow: hidden; }
+        canvas { display: block; }
+        .button {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            padding: 10px 20px;
+            font-size: 16px;
+            color: white;
+            background-color: #ff6600;
+            border: none;
+            cursor: pointer;
+            border-radius: 5px;
+        }
+    </style>
+</head>
+<body>
+    <button class="button" onclick="goBack()">Regresar</button>
+    <script>
+        let scene, camera, renderer;
+        const planetData = {
+            'Sol': { size: 10, color: 0xffff00, distance: 0 },
+            'Mercurio': { size: 1, color: 0xaaaaaa, distance: 15 },
+            'Venus': { size: 1.1, color: 0xffcc99, distance: 18 },
+            'Tierra': { size: 1.2, color: 0x3399ff, distance: 22 },
+            'Luna': { size: 0.4, color: 0xcccccc, distance: 23 },
+            'Marte': { size: 1.1, color: 0xff6633, distance: 26 },
+            'Júpiter': { size: 2.5, color: 0xffcc66, distance: 31 },
+            'Saturno': { size: 1.8, color: 0xffcc99, distance: 37 },
+            'Urano': { size: 1.5, color: 0x66ccff, distance: 42 },
+            'Neptuno': { size: 1.5, color: 0x3366ff, distance: 47.5 },
+        };
+
+        function init() {
+            scene = new THREE.Scene();
+            camera = new THREE.PerspectiveCamera(60, window.innerWidth / window.innerHeight, 1, 500);
+            camera.position.set(0, 20, 100);  
+            camera.lookAt(0, 0, 0);
+
+            renderer = new THREE.WebGLRenderer({ antialias: true });
+            renderer.setSize(window.innerWidth, window.innerHeight);
+            document.body.appendChild(renderer.domElement);
+
+            const ambientLight = new THREE.AmbientLight(0x404040, 2);  
+            scene.add(ambientLight);
+
+            const pointLight = new THREE.PointLight(0xffffff, 1.5);
+            pointLight.position.set(50, 50, 50);
+            scene.add(pointLight);
+
+            console.log("Creando los planetas...");
+
+            for (const planet in planetData) {
+                const data = planetData[planet];
+                const material = new THREE.MeshPhongMaterial({ color: data.color });  
+                const geometry = new THREE.SphereGeometry(data.size, 32, 32);
+                const sphere = new THREE.Mesh(geometry, material);
+
+                sphere.position.x = data.distance;
+                sphere.userData = { angle: Math.random() * Math.PI * 2 };
+                scene.add(sphere);
+
+                planetData[planet].mesh = sphere;
+            }
+
+            console.log("Planetas creados.");
+            animate();
+        }
+
+        function animate() {
+            requestAnimationFrame(animate);
+
+            for (const planet in planetData) {
+                if (planet !== 'Sol') {
+                    const data = planetData[planet];
+                    data.mesh.userData.angle += 0.01;
+                    data.mesh.position.x = data.distance * Math.cos(data.mesh.userData.angle);
+                    data.mesh.position.z = data.distance * Math.sin(data.mesh.userData.angle);
+                }
+            }
+
+            renderer.render(scene, camera);
+        }
+
+        function goBack() {
+            window.location.href = "Despliegueweb.html";
+        }
+
+        window.addEventListener('resize', () => {
+            renderer.setSize(window.innerWidth, window.innerHeight);
+            camera.aspect = window.innerWidth / window.innerHeight;
+            camera.updateProjectionMatrix();
+        });
+
+        init();
+    </script>
+</body>
+</html>
