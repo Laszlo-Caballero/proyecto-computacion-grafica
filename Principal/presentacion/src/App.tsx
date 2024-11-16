@@ -1,6 +1,7 @@
 import { Route, Routes } from "react-router-dom";
 import Landing from "./pages/Landing";
 import Nav from "./components/nav/Nav";
+import Preview from "./pages/Preview";
 
 function App() {
   return (
@@ -9,7 +10,7 @@ function App() {
       <Routes>
         <Route path="/" element={<Landing />} />
         <Route path="/descargar" element={<div>descargar</div>} />
-        <Route path="/preview" element={<div>preview</div>} />
+        <Route path="/preview" element={<Preview />} />
         <Route path="/*" element={<div>404</div>} />
       </Routes>
     </main>
