@@ -20,11 +20,7 @@ class GLWidget(QOpenGLWidget):
         self.camera_yaw = 0.0  # Rotación horizontal (eje Y)
         self.camera_pitch = 0.0  # Rotación vertical (eje X)
         self.last_mouse_pos = None  # Última posición del mouse
-        self.show_box = False
         self.mouse_is_press = False
-        self.button = QPushButton("Cerrar", self)
-        self.button.clicked.connect(self.toggle_info_box)
-        self.button.hide()
     
         self.setFocusPolicy(Qt.StrongFocus)
         self.center_camera_x = 0
@@ -108,22 +104,9 @@ class GLWidget(QOpenGLWidget):
         
         
             
-        if self.show_box:
-            self.draw_info_box()
+
         
-    def draw_info_box(self):
-        
-        # Dibujar el recuadro en la esquina superior derecha
-        painter = QPainter(self)
-        painter.setPen(Qt.white)
-        painter.setBrush(Qt.black)
-        painter.drawRect(self.width() - 300, 10, 290, 200)  
-        painter.setFont(QFont("Arial", 10))
-        painter.drawText(self.width() - 290, 30, "INFO PLANETA")  
-        
-        self.button.setGeometry(self.width()  - 290, 170, 80, 30)  
-        self.button.show()  
-        painter.end() 
+
     
     def wheelEvent(self, event: QWheelEvent | None):
         delta = event.angleDelta().y()
@@ -165,7 +148,7 @@ class GLWidget(QOpenGLWidget):
         if event.button() == Qt.LeftButton:
             self.mouse_is_press = True
             self.last_mouse_pos = event.pos()  # Almacenar la posición del mouse al presionar
-        self.show_box = True
+
         self.update()
 
     def mouseReleaseEvent(self, event: QMouseEvent):

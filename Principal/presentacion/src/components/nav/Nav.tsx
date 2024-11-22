@@ -8,7 +8,9 @@ export default function Nav() {
         <Link to="/">
           <img src={logo} className="h-28" />
         </Link>
-        <Link to="/descargar">Descargar</Link>
+        <a href="https://github.com/Laszlo-Caballero/proyecto-computacion-grafica">
+          Descargar
+        </a>
         <Link to="/preview">Preview</Link>
       </ul>
     </nav>
