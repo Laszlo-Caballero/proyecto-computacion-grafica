@@ -10,7 +10,7 @@ class Planeta:
         self.nombre = nombre
         self.radio = radio / 100
         self.segments = 30
-        self.texture = texture
+        self.texture = f"./textura/{texture}.jpg"
         self.texture_id = self.load_texture()
         self.distancia_sol = distancia_sol
         self.dia_Sol = dias_Sol
@@ -52,6 +52,10 @@ class Planeta:
 
     def drawPlanet(self):
         glBindTexture(GL_TEXTURE_2D, self.texture_id)
+        x_position = math.cos(self.z) * self.distancia_sol
+        z_position = math.sin(self.z) * self.distancia_sol
+        
+        glTranslate(x_position, 0, z_position)
         quadric = gluNewQuadric()
         gluQuadricTexture(quadric, GL_TRUE)
         gluQuadricNormals(quadric, GLU_SMOOTH)

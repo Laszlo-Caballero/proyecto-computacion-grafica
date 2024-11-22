@@ -36,10 +36,7 @@ class GLWidget(QOpenGLWidget):
         
         self.PlanetasClass: list[Planeta] = []
 
-        # for planeta in planetasObj:
-        #     newPlanet = Planeta(planeta, planetasObj[planeta]["tamaño"], planetasObj[planeta]["textura"],
-        #                 planetasObj[planeta]["distancia"],planetasObj[planeta]["dias"])
-        #     self.PlanetasClass.append(newPlanet)
+
 
 
         
@@ -76,6 +73,10 @@ class GLWidget(QOpenGLWidget):
         glMatrixMode(GL_PROJECTION)
         glutInit()
         glEnable(GL_TEXTURE_2D)
+        for planeta in planetasObj:
+           newPlanet = Planeta(planeta, planetasObj[planeta]["tamaño"], planetasObj[planeta]["textura"],
+                        planetasObj[planeta]["distancia"],planetasObj[planeta]["dias"])
+           self.PlanetasClass.append(newPlanet)
 
 
     def resizeGL(self, w, h):
@@ -110,11 +111,8 @@ class GLWidget(QOpenGLWidget):
         # self.mercurio.drawPlanet()
         
         draw_axes()
-        
-        saturno = Planeta("saturno", 18,"./textura/sol.jpg", 0, 10950)
-        
-        saturno.drawPlanet()
-            
+        for planeta in self.PlanetasClass:
+            planeta.drawPlanet()
         
         
         if self.model:
@@ -124,16 +122,6 @@ class GLWidget(QOpenGLWidget):
             
         if self.show_box:
             self.draw_info_box()
-    
-    def dibujar_modelo(self):
-        # Dibujar el modelo 3D cargado
-        glColor3f(1.0, 1.0, 1.0)  # Color blanco para el modelo
-        for mesh in self.model.mesh_list:
-            glBegin(GL_TRIANGLES)
-            for face in mesh.faces:
-                for vertex_i in face:
-                    glVertex3fv(self.model.vertices[vertex_i])
-            glEnd()
         
     def draw_info_box(self):
         

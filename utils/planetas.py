@@ -24,55 +24,55 @@ planetas = [
 planetasObj = {
     'Sol': {
        'tamaño': 20,
-       'textura': "sol.bmp",
+       'textura': "sol",
       'distancia': 0,
       'dias': 0
     },
     'Mercurio': {
         'tamaño': 10,
-        'textura': "",
+        'textura': "mercurio",
         'distancia':1.5,
         'dias': 88
     },
     'Venus': {
         'tamaño': 11,
-        'textura': "",
+        'textura': "venus",
         'distancia':1.80,
         'dias': 225
         },
     'Tierra': {
         'tamaño': 12,
-        'textura': "",
+        'textura': "tierra",
         'distancia': 2.20,
         'dias': 365
         },
     'Marte': {
         'tamaño': 12,
-        'textura': "",
+        'textura': "marte",
         'distancia': 2.60,
         'dias': 687
         },
     'Júpiter': {
         'tamaño': 25,
-        'textura': "",
+        'textura': "jupiter",
         'distancia':3.10,
         'dias': 687
         },
     'Saturno': {
         'tamaño': 18,
-        'textura': "",
+        'textura': "saturno",
         'distancia':3.70,
         'dias': 10950
         },
     'Urano': {
         'tamaño': 15,
-        'textura': "",
+        'textura': "urano",
         'distancia': 4.20,
         'dias': 29400
         },
     'Neptuno': {
         'tamaño': 15,
-        'textura': "",
+        'textura': "neptuno",
         'distancia': 4.75,
         'dias': 60225
         },
