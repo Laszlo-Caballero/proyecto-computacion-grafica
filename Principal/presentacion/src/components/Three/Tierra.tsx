@@ -5,35 +5,27 @@ import { Group, Mesh } from "three";
 import { MTLLoader, OBJLoader } from "three/examples/jsm/Addons.js";
 
 interface Props {
-  planet: string;
   intensity?: number;
   speed: number;
   radiusCenter: number;
 }
 
-export default function Planet({
-  planet,
-  intensity,
-  radiusCenter,
-  speed,
-}: Props) {
+export default function Tierra({ intensity, radiusCenter, speed }: Props) {
   const planetRef = useRef<Group>(null);
   const [angle, setAngle] = useState(0);
 
-  const material = useLoader(MTLLoader, `${planet}.mtl`);
+  const material = useLoader(MTLLoader, `Tierra.mtl`);
 
   const position = useMemo(() => {
     return [0, 0, 0];
   }, []);
 
-  const obj = useLoader(OBJLoader, `${planet}.obj`, (loader) => {
+  const obj = useLoader(OBJLoader, `Tierra.obj`, (loader) => {
     material.preload();
     loader.setMaterials(material);
   });
 
-  const coloMap = useTexture(`${planet}.jpg`);
-
-  console.log(planet);
+  const coloMap = useTexture(`Tierra.jpg`);
 
   useLayoutEffect(() => {
     obj.traverse((child) => {

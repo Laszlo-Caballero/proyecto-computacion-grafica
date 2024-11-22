@@ -36,30 +36,12 @@ class GLWidget(QOpenGLWidget):
         
         self.PlanetasClass: list[Planeta] = []
 
-        for planeta in planetasObj:
-            newPlanet = Planeta(planeta, planetasObj[planeta]["tamaño"], planetasObj[planeta]["textura"],
-                        planetasObj[planeta]["distancia"],planetasObj[planeta]["dias"])
-            self.PlanetasClass.append(newPlanet)
+        # for planeta in planetasObj:
+        #     newPlanet = Planeta(planeta, planetasObj[planeta]["tamaño"], planetasObj[planeta]["textura"],
+        #                 planetasObj[planeta]["distancia"],planetasObj[planeta]["dias"])
+        #     self.PlanetasClass.append(newPlanet)
 
-    def normalizar_modelo(self, model):
-        vertices = np.array(model.vertices)
-        # Encontrar las coordenadas mínimas y máximas de los vértices
-        min_v = np.min(vertices, axis=0)
-        max_v = np.max(vertices, axis=0)
 
-        # Calcular el centro del modelo
-        centro = (min_v + max_v) / 2
-        # Calcular el tamaño del modelo
-        size = max_v - min_v
-        max_size = max(size)
-
-        # Escalar el modelo para que quepa dentro de un rango de [-1, 1]
-        escala = 1.0 / max_size
-        for i in range(len(model.vertices)):
-            model.vertices[i] = (model.vertices[i] - centro) * escala
-
-        print("Modelo normalizado")
-        return model
         
     def toggle_info_box(self):
         self.show_box = not self.show_box 
@@ -94,14 +76,7 @@ class GLWidget(QOpenGLWidget):
         glMatrixMode(GL_PROJECTION)
         glutInit()
         glEnable(GL_TEXTURE_2D)
-        
-        try:
-            self.model = pywavefront.Wavefront('obj\\tierra.obj', collect_faces=True)
-            self.model = self.normalizar_modelo(self.model)
-            print("Modelo cargado y normalizado correctamente")
-        except Exception as e:
-            print(f"Error al cargar el modelo: {e}")
-            self.model = None
+
 
     def resizeGL(self, w, h):
         glViewport(0, 0, w, h)
@@ -135,10 +110,10 @@ class GLWidget(QOpenGLWidget):
         # self.mercurio.drawPlanet()
         
         draw_axes()
-        for planeta in self.PlanetasClass:
-            # planeta.load_texture()
-            # glBindTexture(GL_TEXTURE_2D, planeta.texture_id)
-            planeta.drawPlanet()
+        
+        saturno = Planeta("saturno", 18,"saturno.glb", 3.70, 10950)
+        
+        saturno.drawPlanet()
             
             
         

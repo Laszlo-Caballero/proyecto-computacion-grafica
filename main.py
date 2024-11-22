@@ -1,5 +1,4 @@
 import random
-import os
 import sys
 from PyQt5.QtWidgets import QMainWindow, QApplication
 from Widget.GLWidget import GLWidget
