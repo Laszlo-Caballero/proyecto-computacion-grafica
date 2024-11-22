@@ -3,15 +3,15 @@ from OpenGL.GL import *
 from OpenGL.GLU import *
 from OpenGL.GLUT import *
 import math
-from pygltflib import GLTF2
 import numpy as np
 
 class Planeta:
-    def __init__(self, nombre, radio, obj, distancia_sol, dias_Sol):
+    def __init__(self, nombre, radio, texture, distancia_sol, dias_Sol):
         self.nombre = nombre
         self.radio = radio / 100
-        self.obj = GLTF2().load(f"obj/{obj}")
-        self.texture_id = -1
+        self.segments = 30
+        self.texture = texture
+        self.texture_id = self.load_texture()
         self.distancia_sol = distancia_sol
         self.dia_Sol = dias_Sol
         self.z = 0
@@ -24,54 +24,39 @@ class Planeta:
     def rotate(self):
         self.z += self.angle_increment
 
-    def cargarVertices(self):
-        obj = self.obj
-        
-        # Obtener el accesor de los vértices
-        accesor = obj.accessors[obj.meshes[0].primitives[0].attributes.POSITION]
-        print("Accesor:", accesor)
 
-        # Obtener el bufferView
-        buffer_view = obj.bufferViews[accesor.bufferView]
-        print("Buffer View:", buffer_view)
 
-        # Obtener el buffer
-        buffer = obj.buffers[buffer_view.buffer]
-        print("Buffer:", buffer)
+    def load_texture(self) -> int:
+         # Cargar la textura usando Pillow
+         image = Image.open(self.texture)  # Flip porque OpenGL usa coordenadas inversas
+         img_data = image.convert("RGBA").tobytes()
 
-        # Leer los datos binarios
-        if buffer.uri is None:
-            raise ValueError("El archivo GLB no contiene datos binarios o el URI está vacío.")
+         # Generar una textura en OpenGL
+         texture_id = glGenTextures(1)
+         glBindTexture(GL_TEXTURE_2D, texture_id)
+
+    #     # Configurar los parámetros de la textura
+         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT)
+         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT)
+         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR)
+         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR)
         
-        if buffer.uri.startswith("data:"):
-            # Si los datos están embebidos en el archivo GLB (data-uri)
-            binary_data = np.frombuffer(bytes(buffer.uri.split(",")[1], "utf-8"), dtype=np.uint8)
-        else:
-            # Si los datos están en un archivo externo
-            file_path = os.path.join(os.path.dirname(self.obj.uri), buffer.uri)
-            with open(file_path, "rb") as f:
-                binary_data = np.frombuffer(f.read(), dtype=np.uint8)
-        
-        start = buffer_view.byteOffset
-        end = start + buffer_view.byteLength
-        
-        vertex_data = np.frombuffer(binary_data[start:end], dtype=np.float32)
-        vertices = vertex_data.reshape((-1, 3))
-        
-        return vertices
+    #     # Cargar los datos de la textura
+         glTexImage2D(
+             GL_TEXTURE_2D, 0, GL_RGBA,
+             image.width, image.height, 0,
+             GL_RGBA, GL_UNSIGNED_BYTE, img_data
+         )
+
+         return texture_id
 
     def drawPlanet(self):
-        x_position = math.cos(self.z) * self.distancia_sol
-        z_position = math.sin(self.z) * self.distancia_sol
+        glBindTexture(GL_TEXTURE_2D, self.texture_id)
+        quadric = gluNewQuadric()
+        gluQuadricTexture(quadric, GL_TRUE)
+        gluQuadricNormals(quadric, GLU_SMOOTH)
+        gluSphere(quadric, self.radio, 20, 20)
         
-        glTranslatef(x_position, 0, z_position)
         
-        vertices = self.cargarVertices()
         
-        glBegin(GL_TRIANGLES)
-        for vertex in vertices:
-            glVertex3fv(vertex)
-        glEnd()
-        glutSwapBuffers()
-
         

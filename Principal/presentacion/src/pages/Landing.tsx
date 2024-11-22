@@ -1,5 +1,6 @@
 import { Link } from "react-router-dom";
 import video from "../assets/video.webm";
+import "./index.css";
 
 export default function Landing() {
   return (

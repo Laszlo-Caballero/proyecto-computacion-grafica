@@ -111,12 +111,10 @@ class GLWidget(QOpenGLWidget):
         
         draw_axes()
         
-        saturno = Planeta("saturno", 18,"saturno.glb", 3.70, 10950)
+        saturno = Planeta("saturno", 18,"./textura/sol.jpg", 0, 10950)
         
         saturno.drawPlanet()
             
-            
-        
         
         
         if self.model:
