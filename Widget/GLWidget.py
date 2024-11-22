@@ -25,7 +25,6 @@ class GLWidget(QOpenGLWidget):
         self.button = QPushButton("Cerrar", self)
         self.button.clicked.connect(self.toggle_info_box)
         self.button.hide()
-        self.model = None
     
         self.setFocusPolicy(Qt.StrongFocus)
         self.center_camera_x = 0
@@ -103,22 +102,11 @@ class GLWidget(QOpenGLWidget):
         gluLookAt(camera_x, camera_y, camera_z,  # Posición de la cámara ajustada
                   self.center_camera_x, self.center_camera_y, 0,  # Mira hacia (centro de la escena)
                   0.0, 1.0, 0)
-        # self.sol.load_texture()
-        # glBindTexture(GL_TEXTURE_2D, self.sol.texture_id)
-        # self.sol.drawPlanet()
-        
-        
-        # self.mercurio.drawPlanet()
-        
-        draw_axes()
+
         for planeta in self.PlanetasClass:
             planeta.drawPlanet()
         
         
-        if self.model:
-            self.dibujar_modelo()
-        else:
-            print("No hay modelo cargado para dibujar")
             
         if self.show_box:
             self.draw_info_box()

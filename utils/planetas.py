@@ -37,43 +37,43 @@ planetasObj = {
     'Venus': {
         'tamaño': 11,
         'textura': "venus",
-        'distancia':1.80,
+        'distancia':2.5,
         'dias': 225
         },
     'Tierra': {
         'tamaño': 12,
         'textura': "tierra",
-        'distancia': 2.20,
+        'distancia': 3.20,
         'dias': 365
         },
     'Marte': {
         'tamaño': 12,
         'textura': "marte",
-        'distancia': 2.60,
+        'distancia': 4.60,
         'dias': 687
         },
     'Júpiter': {
         'tamaño': 25,
         'textura': "jupiter",
-        'distancia':3.10,
+        'distancia':5.70,
         'dias': 687
         },
     'Saturno': {
         'tamaño': 18,
         'textura': "saturno",
-        'distancia':3.70,
+        'distancia':6.90,
         'dias': 10950
         },
     'Urano': {
         'tamaño': 15,
         'textura': "urano",
-        'distancia': 4.20,
+        'distancia': 7.4,
         'dias': 29400
         },
     'Neptuno': {
         'tamaño': 15,
         'textura': "neptuno",
-        'distancia': 4.75,
+        'distancia': 8.2,
         'dias': 60225
         },
 }
